@@ -42,6 +42,29 @@ function Autobind(_, _2, descriptor) {
     };
     return adjustedDescriptor;
 }
+// ProjectList Class
+var ProjectList = /** @class */ (function () {
+    function ProjectList(type) {
+        this.type = type;
+        this.templateElement = document.getElementById("project-list");
+        this.hostElement = document.getElementById("app");
+        var importedNode = document.importNode(this.templateElement.content, true);
+        this.element = importedNode.firstElementChild;
+        this.element.id = "".concat(this.type, "-projects");
+        this.attach();
+        this.renderContent();
+    }
+    ProjectList.prototype.attach = function () {
+        this.hostElement.insertAdjacentElement("beforeend", this.element);
+    };
+    ProjectList.prototype.renderContent = function () {
+        var listId = "".concat(this.type, "-projects-list");
+        this.element.querySelector("ul").id = listId;
+        this.element.querySelector("h2").textContent =
+            this.type.toUpperCase() + " PROJECTS";
+    };
+    return ProjectList;
+}());
 //ProjectInput Class
 var ProjectInput = /** @class */ (function () {
     function ProjectInput() {
@@ -114,3 +137,5 @@ var ProjectInput = /** @class */ (function () {
     return ProjectInput;
 }());
 var projectInput = new ProjectInput();
+var activePojectList = new ProjectList("active");
+var finishedPojectList = new ProjectList("finished");
