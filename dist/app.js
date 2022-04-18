@@ -117,15 +117,25 @@ class ProjectItem extends Component {
         else
             return " persons";
     }
-    dragStartHandler(event) { }
-    dragEndHandler(event) { }
-    configure() { }
+    dragStartHandler(event) {
+        console.log(event);
+    }
+    dragEndHandler(_) {
+        console.log("Drag End");
+    }
+    configure() {
+        this.element.addEventListener("dragstart", this.dragStartHandler);
+        this.element.addEventListener("dragstart", this.dragEndHandler);
+    }
     renderContent() {
         this.element.querySelector("h2").textContent = this.project.title;
         this.element.querySelector("h3").textContent = `${this.project.numberOfPeople.toString()} ${this.numberofPeopleAssigned} assigned`;
         this.element.querySelector("p").textContent = this.project.description;
     }
 }
+__decorate([
+    Autobind
+], ProjectItem.prototype, "dragStartHandler", null);
 // ProjectList Class
 class ProjectList extends Component {
     constructor(type) {
@@ -136,7 +146,19 @@ class ProjectList extends Component {
         this.configure();
         this.renderContent();
     }
+    dragOverHandler(_) {
+        const listElement = this.element.querySelector("ul");
+        listElement.classList.add("droppable");
+    }
+    dropHandler(_) { }
+    dragLeaveHandler(_) {
+        const listElement = this.element.querySelector("ul");
+        listElement.classList.remove("droppable");
+    }
     configure() {
+        this.element.addEventListener("dragover", this.dragOverHandler);
+        this.element.addEventListener("dragleave", this.dragLeaveHandler);
+        this.element.addEventListener("drop", this.dropHandler);
         projectState.addListener((projects) => {
             const relevantProjects = projects.filter((project) => {
                 if (this.type === "active") {
@@ -164,6 +186,12 @@ class ProjectList extends Component {
         }
     }
 }
+__decorate([
+    Autobind
+], ProjectList.prototype, "dragOverHandler", null);
+__decorate([
+    Autobind
+], ProjectList.prototype, "dragLeaveHandler", null);
 //ProjectInput Class
 class ProjectInput extends Component {
     constructor() {
