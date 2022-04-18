@@ -1,3 +1,15 @@
+// Drag & Drop Interfaces
+interface Draggable {
+  dragStartHandler(event: DragEvent): void;
+  dragEndHandler(event: DragEvent): void;
+}
+
+interface DragTarget {
+  dragOverHandler(event: DragEvent): void;
+  dropHandler(event: DragEvent): void;
+  dragLeaveHandler(event: DragEvent): void;
+}
+
 // Project Type
 enum ProjectStatus {
   Active,
@@ -165,8 +177,17 @@ abstract class Component<T extends HTMLElement, U extends HTMLElement> {
 }
 
 // Project Item Class
-class ProjectItem extends Component<HTMLUListElement, HTMLLIElement> {
+class ProjectItem
+  extends Component<HTMLUListElement, HTMLLIElement>
+  implements Draggable
+{
   private project: Project;
+
+  get numberofPeopleAssigned() {
+    if (this.project.numberOfPeople === 1) {
+      return " person";
+    } else return " persons";
+  }
 
   constructor(hostId: string, project: Project) {
     super("single-project", hostId, false, project.id);
@@ -176,13 +197,19 @@ class ProjectItem extends Component<HTMLUListElement, HTMLLIElement> {
     this.renderContent();
   }
 
+  dragStartHandler(event: DragEvent): void {}
+
+  dragEndHandler(event: DragEvent): void {}
+
   configure() {}
 
   renderContent() {
     this.element.querySelector("h2")!.textContent = this.project.title;
     this.element.querySelector(
       "h3"
-    )!.textContent = `${this.project.numberOfPeople.toString()} People`;
+    )!.textContent = `${this.project.numberOfPeople.toString()} ${
+      this.numberofPeopleAssigned
+    } assigned`;
     this.element.querySelector("p")!.textContent = this.project.description;
   }
 }
